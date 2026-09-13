@@ -1,0 +1,18 @@
+{
+  "name": "Hybrid Athlete",
+  "short_name": "Hybrid Athlete",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#08101c",
+  "theme_color": "#0b1220",
+  "description": "6-week hybrid strength, hypertrophy and conditioning program.",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
