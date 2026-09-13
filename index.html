@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Hybrid Athlete" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <title>Hybrid Athlete</title>
+  <style>
+    :root{--bg:#08101c;--panel:#101b2b;--panel2:#142236;--text:#f7f9fc;--muted:#9badc5;--line:#23344d;--accent:#6da5ff;--green:#61d69c;--orange:#ffad66;--purple:#b99cff;--danger:#ff7b7b}
+    *{box-sizing:border-box}html{background:var(--bg);color-scheme:dark}body{margin:0;background:linear-gradient(180deg,#0a1423 0%,var(--bg) 32%);color:var(--text);font:15px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;min-height:100vh;padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:760px;margin:0 auto}.top{position:sticky;top:0;z-index:5;padding:calc(14px + env(safe-area-inset-top)) 16px 12px;background:rgba(8,16,28,.9);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.05)}
+    .topline{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:22px;font-weight:800;letter-spacing:-.03em}.gear{width:44px;height:44px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);font-size:20px}.badges{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.badge{padding:5px 9px;border-radius:999px;background:#182942;color:#cdd9e9;font-size:12px;font-weight:700}.badge.accent{background:#173358;color:#9bc2ff}
+    main{padding:16px}.hero{padding:18px;border-radius:22px;background:linear-gradient(135deg,#18345b,#102036 65%,#16273e);border:1px solid #28476c;box-shadow:0 16px 40px rgba(0,0,0,.22)}.eyebrow{color:#9ec4ff;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.hero h1{font-size:30px;line-height:1.05;margin:7px 0 8px;letter-spacing:-.04em}.hero p{margin:0;color:#c2d0e2}.progress{margin-top:15px}.progresshead{display:flex;justify-content:space-between;color:#b9c7d9;font-size:12px;margin-bottom:7px}.bar{height:8px;background:#0b1625;border-radius:99px;overflow:hidden}.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:99px}
+    .section{margin-top:20px}.sectionTitle{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:10px}.sectionTitle h2{font-size:18px;margin:0}.sectionTitle span{font-size:12px;color:var(--muted)}
+    .card{background:rgba(16,27,43,.92);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px}.exercise{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}.check{appearance:none;width:24px;height:24px;border:2px solid #405674;border-radius:8px;margin:2px 0 0;background:#0a1422}.check:checked{border-color:var(--green);background:var(--green);box-shadow:inset 0 0 0 5px #0b1723}.exercise.done .name{text-decoration:line-through;color:#73849b}.name{font-weight:800;font-size:16px}.rx{color:#a9bdd7;margin-top:2px}.note{color:#7188a5;font-size:12px;margin-top:4px}.inputs{display:grid;grid-template-columns:1fr 84px;gap:8px;margin-top:11px}.field{width:100%;min-height:44px;border:1px solid #2c415f;border-radius:12px;background:#0a1525;color:var(--text);padding:10px 12px;outline:none}.field:focus{border-color:var(--accent)}
+    .dayBlock{border-left:3px solid var(--accent);padding-left:12px;margin:19px 0 8px}.dayBlock.green{border-color:var(--green)}.dayBlock.orange{border-color:var(--orange)}.dayBlock.purple{border-color:var(--purple)}.dayBlock h3{margin:0;font-size:17px}.dayBlock p{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .loadGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.loadCard{padding:13px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}.loadCard b{display:block;font-size:13px}.loadCard .big{font-size:21px;font-weight:850;margin-top:6px}.loadCard small{color:var(--muted)}
+    .weekTable{width:100%;border-collapse:collapse;background:var(--panel);border-radius:16px;overflow:hidden;border:1px solid var(--line)}.weekTable th,.weekTable td{text-align:left;padding:10px 9px;border-bottom:1px solid var(--line);vertical-align:top}.weekTable th{font-size:11px;color:#9fb1c7;text-transform:uppercase;letter-spacing:.05em}.weekTable td{font-size:13px}.weekTable tr:last-child td{border-bottom:0}
+    .nav{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(8,16,28,.94);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.07)}.navin{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.nav button{height:54px;border:0;border-radius:15px;background:transparent;color:#8498b2;font-size:12px;font-weight:700}.nav button.active{background:#162842;color:#d8e7fa}.nav button span{display:block;font-size:19px;line-height:20px;margin-bottom:2px}
+    .view{display:none}.view.active{display:block}.empty{padding:24px;text-align:center;color:var(--muted)}
+    dialog{width:min(92vw,480px);border:1px solid #2b4260;border-radius:22px;background:#101c2d;color:var(--text);padding:0;box-shadow:0 30px 90px #0009}dialog::backdrop{background:#0009;backdrop-filter:blur(4px)}.modal{padding:18px}.modal h2{margin:0 0 6px}.modal p{margin:0 0 15px;color:var(--muted)}.settingGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.settingGrid label{font-size:12px;color:#9eb0c8}.settingGrid label.full{grid-column:1/-1}.settingGrid input,.settingGrid select{margin-top:5px}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.btn{min-height:44px;border-radius:12px;padding:0 15px;border:1px solid var(--line);background:#15253a;color:var(--text);font-weight:750}.btn.primary{background:#2563a9;border-color:#397bc7}.tip{margin-top:12px;padding:12px;border-radius:14px;background:#0b1625;color:#9eb1c9;font-size:12px}
+    @media(max-width:520px){main{padding:13px}.hero h1{font-size:28px}.loadGrid{grid-template-columns:1fr}.weekTable th:nth-child(4),.weekTable td:nth-child(4){display:none}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="topline"><div class="brand">Hybrid Athlete</div><button class="gear" id="settingsBtn" aria-label="Settings">⚙︎</button></div>
+    <div class="badges"><span class="badge accent" id="weekBadge">Week 1</span><span class="badge" id="phaseBadge">Rebuild</span><span class="badge" id="tmBadge">95% TM</span></div>
+  </header>
+  <main>
+    <section id="today" class="view active"></section>
+    <section id="program" class="view"></section>
+    <section id="loads" class="view"></section>
+    <section id="tracker" class="view"></section>
+  </main>
+</div>
+<nav class="nav"><div class="navin">
+  <button data-view="today" class="active"><span>◉</span>Today</button>
+  <button data-view="program"><span>▤</span>Program</button>
+  <button data-view="loads"><span>↗</span>Loads</button>
+  <button data-view="tracker"><span>✓</span>Tracker</button>
+</div></nav>
+<dialog id="settings"><form method="dialog" class="modal">
+  <h2>Training settings</h2><p>Change your current week or strength estimates. All calculated loads update automatically.</p>
+  <div class="settingGrid">
+    <label class="full">Current week<select id="setWeek" class="field"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label>
+    <label>Bench 1RM<input id="setBench" class="field" inputmode="decimal" type="number" step="2.5"></label>
+    <label>Deadlift 1RM<input id="setDeadlift" class="field" inputmode="decimal" type="number" step="2.5"></label>
+    <label>Squat 1RM<input id="setSquat" class="field" inputmode="decimal" type="number" step="2.5"></label>
+    <label>Training max %<input id="setTm" class="field" inputmode="decimal" type="number" step="1" min="85" max="100"></label>
+  </div>
+  <div class="tip">iPhone: open the deployed site in Safari → Share → Add to Home Screen.</div>
+  <div class="actions"><button class="btn" value="cancel">Cancel</button><button class="btn primary" id="saveSettings" value="default">Save</button></div>
+</form></dialog>
+<script>
+const KEY='hybrid-athlete-v2';
+const defaults={week:1,bench:135,deadlift:205,squat:175,tmPct:.95,completed:{},logs:{},notes:{}};
+let state={...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')};
+state.completed=state.completed||{};state.logs=state.logs||{};state.notes=state.notes||{};
+const goals={bench:140,deadlift:220,squat:200};
+const phases={1:'Rebuild',2:'Build',3:'Build',4:'Intensify',5:'Peak',6:'Max Test'};
+const colours={Monday:'',Tuesday:'green',Wednesday:'purple',Thursday:'orange',Friday:'purple',Saturday:'',Sunday:'green'};
+const weekRx={
+ bench:{1:{top:['1×5',.875],back:['4×5',.775]},2:{top:['1×5',.90],back:['4×5',.80]},3:{top:['1×4',.925],back:['4×4',.825]},4:{top:['1×3',.95],back:['4×3',.85]},5:{top:['1×1',1],back:['3×2',.875]}},
+ deadlift:{1:{top:['1×5',.80],back:['3×5',.725]},2:{top:['1×4',.85],back:['3×4',.75]},3:{top:['1×3',.90],back:['3×3',.80]},4:{top:['1×2',.95],back:['3×2',.825]},5:{top:['1×1',1],back:['2×2',.85]}},
+ squat:{1:{top:['1×6',.80],back:['3×6',.70]},2:{top:['1×5',.85],back:['3×5',.725]},3:{top:['1×4',.90],back:['3×4',.75]},4:{top:['1×3',.95],back:['3×3',.80]},5:{top:['1×1',1],back:['3×2',.825]}},
+ benchVolume:{1:['4×8',.675],2:['4×7',.70],3:['5×5',.725],4:['4×5',.75],5:['4×4',.775]}
+};
+const standard={
+ Monday:[['Bench Press','MAIN','Heavy strength'],['Standing Barbell Military Press','3 × 5–6','1–2 reps in reserve'],['Weighted Pull-Ups','3 × 5–6','Strong full ROM'],['Incline Barbell Bench','2 × 6–8','Controlled chest volume'],['Barbell Row','3 × 6–8','Heavy but clean'],['Renegade Row','2 × 6–8 / side','Trunk + back'],['EZ-Bar Curl','4 × 8–10','Add load after all sets hit 10'],['Weighted Dips','3 × 6–8','Chest + triceps'],['Dead Hang + Side Bend','2 × 8–10 / side','Decompress + trunk']],
+ Tuesday:[['Conventional Deadlift','MAIN','First proper exercise'],['Paused Back Squat','PAUSED','Technique exposure'],['Romanian Deadlift','2 × 6–8','Posterior-chain size'],['Bulgarian Split Squat','3 × 6–8 / leg','Unilateral strength'],['Cossack Squat','2 × 6 / side','Lateral strength + mobility'],['Half-Kneeling Row + Rotation','3 × 8 / side','Controlled rotation'],['Side-to-Side KB Pick-Up','3 × 6–8 / side','Own the weight transfer'],['Calf Raise','3 × 10–15','Full ROM'],['Knee-Hover Crawl','2 × 10–15 m','Last exercise']],
+ Wednesday:[['Pilates + Mobility','45–60 min','Easy–moderate. Hips, T-spine, ankle, lats and trunk. Leave feeling better.']],
+ Thursday:[['Push Press','3 × 3','Maximum bar speed'],['Explosive Pull-Ups','3 × 3–5','Stop when speed drops'],['Bench Press — Volume','VOLUME','Second bench exposure'],['Chest-Supported Row','3 × 8–10','Back hypertrophy'],['Chest Fly','2 × 10–15','Controlled stretch'],['Reverse Pec Deck / Rear-Delt Fly','3 × 12–20','Rear-delt size'],['Lateral Raise','3 × 12–20','Shoulder width'],['Hammer Curl','3 × 8–12','Biceps / brachialis'],['Incline DB / Cable Curl','2 × 10–15','Long-length biceps'],['Triceps Pressdown','3 × 10–15','Triceps size'],['OH Triceps Extension','2 × 10–15','Long-head triceps'],['Dead Hang','2 × 30–45 sec','Optional decompress']],
+ Friday:[['Box Jump','3 × 3','Full rest, clean landing'],['Back Squat','MAIN','Heavy squat day'],['Kettlebell Swing','3 × 8–10','Fast hips'],['OH KB Split-Stance Lunge','3 × 6 / side','Own the position'],['Wood Chop','3 × 8–12 / side','Rotate + control return'],['Directional Hop + Stick','3 × 3 / direction','Own the landing'],['Farmer Carry','3 × 20–30 m','Heavy + tall posture'],['Lateral Raise','3 × 12–20','Low-fatigue delt volume']],
+ Saturday:[['Rest / Easy Walk','—','No compulsory training']],
+ Sunday:[['Zone 2 Aerobic Base','30–45 min','Conversational pace. Bike, rower, incline walk, or easy run if ankle feels good.']]
+};
+const maxWeek={
+ Monday:[['Bench Press — Max Test','MAX','Bench test'],['Weighted Pull-Ups','2 × 5','Easy quality work'],['Rear-Delt Fly','2 × 15','Light pump'],['Dead Hang','2 × 30 sec','Decompress']],
+ Tuesday:[['Conventional Deadlift — Max Test','MAX','Deadlift test'],['Calf Raise','2 × 12','Easy'],['Mobility','10–15 min','Hips + ankle + back']],
+ Wednesday:[['Pilates + Mobility','30–45 min','Recovery emphasis']],
+ Thursday:[['Push Press','2 × 3','Light + explosive'],['Explosive Pull-Ups','2 × 3','Stop fresh'],['Dead Hang','2 × 30–45 sec','Decompress'],['Easy Walk / Bike','20–30 min','Recovery only']],
+ Friday:[['Box Jump','2 × 3','Crisp only'],['Back Squat — Max Test','MAX','Squat test'],['Easy Mobility','10–15 min','Finish feeling good']],
+ Saturday:[['Rest','—','Full recovery']],
+ Sunday:[['Zone 2','20–30 min','Easy only']]
+};
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function round25(x){return Math.round(x/2.5)*2.5}
+function tm(lift){return state[lift]*state.tmPct}
+function kg(x){return `${round25(x).toFixed(1)} kg`}
+function mainRx(lift){if(state.week===6)return maxAttempts(lift);const r=weekRx[lift][state.week];return `${r.top[0]} @ ${kg(tm(lift)*r.top[1])}  •  ${r.back[0]} @ ${kg(tm(lift)*r.back[1])}`}
+function volumeRx(){if(state.week===6)return 'No normal bench volume';const r=weekRx.benchVolume[state.week];return `${r[0]} @ ${kg(tm('bench')*r[1])}`}
+function pausedRx(){return state.week===6?'Skip during test week':`2 × 5 @ ${kg(tm('squat')*.65)}`}
+function maxAttempts(lift){const current=state[lift];return `Attempts: ${kg(current*.90)} → ${kg(current*.975)} → ${kg(Math.min(goals[lift],current*1.025))}`}
+function exerciseRx(name,rx){if(rx==='MAIN'){if(name.includes('Bench'))return mainRx('bench');if(name.includes('Deadlift'))return mainRx('deadlift');return mainRx('squat')}if(rx==='VOLUME')return volumeRx();if(rx==='PAUSED')return pausedRx();if(rx==='MAX'){if(name.includes('Bench'))return maxAttempts('bench');if(name.includes('Deadlift'))return maxAttempts('deadlift');return maxAttempts('squat')}return rx}
+function dayName(){return ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date().getDay()]}
+function keyFor(day,i){return `w${state.week}-${day}-${i}`}
+function exerciseCard(day,e,i){const key=keyFor(day,i),done=!!state.completed[key],log=state.logs[key]||{};const rx=exerciseRx(e[0],e[1]);const loggable=/Bench|Deadlift|Squat/.test(e[0]);return `<div class="card exercise ${done?'done':''}" data-key="${key}"><input class="check" type="checkbox" ${done?'checked':''} aria-label="Complete ${e[0]}"><div><div class="name">${e[0]}</div><div class="rx">${rx}</div><div class="note">${e[2]||''}</div>${loggable?`<div class="inputs"><input class="field actual" inputmode="decimal" placeholder="Actual load" value="${log.actual||''}"><input class="field rpe" inputmode="decimal" placeholder="RPE" value="${log.rpe||''}"></div>`:''}</div></div>`}
+function currentProgram(){return state.week===6?maxWeek:standard}
+function renderToday(){const day=dayName(),p=currentProgram(),items=p[day]||[];const total=items.length,done=items.filter((_,i)=>state.completed[keyFor(day,i)]).length;document.querySelector('#today').innerHTML=`<div class="hero"><div class="eyebrow">${day} • Week ${state.week}</div><h1>${dayTitle(day)}</h1><p>${daySubtitle(day)}</p><div class="progress"><div class="progresshead"><span>Workout progress</span><span>${done}/${total}</span></div><div class="bar"><i style="width:${total?done/total*100:0}%"></i></div></div></div><div class="section"><div class="sectionTitle"><h2>Today’s work</h2><span>${phases[state.week]}</span></div>${items.map((e,i)=>exerciseCard(day,e,i)).join('')}</div>`;wireCards('#today')}
+function dayTitle(day){const titles={Monday:'Heavy Upper + Arms',Tuesday:'Deadlift + Athletic Lower',Wednesday:'Pilates + Mobility',Thursday:'Upper Power + Hypertrophy',Friday:'Squat + Lower Power',Saturday:'Rest',Sunday:'Zone 2 Aerobic Base'};return state.week===6&&['Monday','Tuesday','Friday'].includes(day)?`${day==='Monday'?'Bench':day==='Tuesday'?'Deadlift':'Squat'} Max Test`:titles[day]}
+function daySubtitle(day){if(state.week===6)return 'Test week: perform the important work, cut the junk, and arrive fresh for each max.';const t={Monday:'Heavy pressing and pulling, then direct arm work.',Tuesday:'Deadlift first, secondary squat practice, then unilateral and rotational work.',Wednesday:'Restore movement quality without adding fatigue.',Thursday:'Move fast first, build bench volume, then chase upper-body size.',Friday:'Jump crisp, squat hard, then keep the athletic qualities.',Saturday:'Recover. Easy walking is fine.',Sunday:'Build the aerobic base without turning it into another hard day.'};return t[day]}
+function renderProgram(){const p=currentProgram();let html=`<div class="sectionTitle"><h2>Week ${state.week} program</h2><span>${phases[state.week]}</span></div>`;Object.entries(p).forEach(([day,items])=>{html+=`<div class="dayBlock ${colours[day]}"><h3>${day} — ${dayTitle(day)}</h3><p>${daySubtitle(day)}</p></div>${items.map((e,i)=>exerciseCard(day,e,i)).join('')}`});document.querySelector('#program').innerHTML=html;wireCards('#program')}
+function renderLoads(){const rows=['bench','deadlift','squat'].map(l=>`<div class="loadCard"><b>${l[0].toUpperCase()+l.slice(1)} training max</b><div class="big">${kg(tm(l))}</div><small>${state[l]} kg estimated 1RM • goal ${goals[l]} kg</small></div>`).join('');let table='<table class="weekTable"><thead><tr><th>Week</th><th>Bench</th><th>Deadlift</th><th>Squat</th></tr></thead><tbody>';for(let w=1;w<=6;w++){table+=`<tr><td><b>${w}</b><br>${phases[w]}</td><td>${loadSummary('bench',w)}</td><td>${loadSummary('deadlift',w)}</td><td>${loadSummary('squat',w)}</td></tr>`}table+='</tbody></table>';document.querySelector('#loads').innerHTML=`<div class="sectionTitle"><h2>Calculated loads</h2><span>Nearest 2.5 kg</span></div><div class="loadGrid">${rows}</div><div class="section"><div class="sectionTitle"><h2>6-week progression</h2><span>95% TM default</span></div>${table}</div><div class="section"><div class="sectionTitle"><h2>Thursday bench</h2><span>Volume exposure</span></div>${benchVolumeTable()}</div>`}
+function loadSummary(lift,w){if(w===6){const old=state.week;state.week=6;const x=maxAttempts(lift);state.week=old;return x.replace('Attempts: ','')}const r=weekRx[lift][w];return `${r.top[0]} @ ${kg(tm(lift)*r.top[1])}<br><small>${r.back[0]} @ ${kg(tm(lift)*r.back[1])}</small>`}
+function benchVolumeTable(){let s='<table class="weekTable"><thead><tr><th>Week</th><th>Work</th><th>Load</th></tr></thead><tbody>';for(let w=1;w<=6;w++){if(w===6)s+=`<tr><td>6</td><td>No volume</td><td>Max test week</td></tr>`;else{const r=weekRx.benchVolume[w];s+=`<tr><td>${w}</td><td>${r[0]}</td><td>${kg(tm('bench')*r[1])}</td></tr>`}}return s+'</tbody></table>'}
+function renderTracker(){let html=`<div class="sectionTitle"><h2>Training tracker</h2><span>Week ${state.week}</span></div><div class="card"><div class="name">Main-lift targets</div><div class="note">Actual load + RPE entered on Today or Program save automatically here.</div></div>`;const p=currentProgram();Object.entries(p).forEach(([day,items])=>{items.forEach((e,i)=>{if(!/Bench|Deadlift|Squat/.test(e[0]))return;const k=keyFor(day,i),log=state.logs[k]||{};html+=`<div class="card"><div class="name">${day} • ${e[0]}</div><div class="rx">${exerciseRx(e[0],e[1])}</div><div class="inputs"><input class="field trackerActual" data-key="${k}" inputmode="decimal" placeholder="Actual load" value="${log.actual||''}"><input class="field trackerRpe" data-key="${k}" inputmode="decimal" placeholder="RPE" value="${log.rpe||''}"></div></div>`})});document.querySelector('#tracker').innerHTML=html;document.querySelectorAll('.trackerActual,.trackerRpe').forEach(el=>el.addEventListener('change',()=>{const k=el.dataset.key;state.logs[k]=state.logs[k]||{};state.logs[k][el.classList.contains('trackerActual')?'actual':'rpe']=el.value;save()}))}
+function wireCards(scope){document.querySelectorAll(`${scope} .exercise`).forEach(card=>{const k=card.dataset.key;card.querySelector('.check').addEventListener('change',e=>{state.completed[k]=e.target.checked;save();renderAll()});const a=card.querySelector('.actual'),r=card.querySelector('.rpe');if(a)a.addEventListener('change',()=>{state.logs[k]=state.logs[k]||{};state.logs[k].actual=a.value;save();renderTracker()});if(r)r.addEventListener('change',()=>{state.logs[k]=state.logs[k]||{};state.logs[k].rpe=r.value;save();renderTracker()})})}
+function renderHeader(){document.querySelector('#weekBadge').textContent=`Week ${state.week}`;document.querySelector('#phaseBadge').textContent=phases[state.week];document.querySelector('#tmBadge').textContent=`${Math.round(state.tmPct*100)}% TM`}
+function renderAll(){renderHeader();renderToday();renderProgram();renderLoads();renderTracker()}
+function openSettings(){setWeek.value=state.week;setBench.value=state.bench;setDeadlift.value=state.deadlift;setSquat.value=state.squat;setTm.value=Math.round(state.tmPct*100);settings.showModal()}
+document.querySelector('#settingsBtn').addEventListener('click',openSettings);document.querySelector('#saveSettings').addEventListener('click',e=>{e.preventDefault();state.week=+setWeek.value;state.bench=+setBench.value||135;state.deadlift=+setDeadlift.value||205;state.squat=+setSquat.value||175;state.tmPct=(+setTm.value||95)/100;save();settings.close();renderAll()});
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===b.dataset.view));window.scrollTo({top:0,behavior:'smooth'})}));
+renderAll();if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
