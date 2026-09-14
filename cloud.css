@@ -1,15 +1,23 @@
-.navin.five-tabs{grid-template-columns:repeat(5,1fr)}
-.navin.five-tabs button{font-size:10px}
-#cloudBadge.cloud-online{background:#123326;color:#91e4ba}
-#cloudBadge.cloud-local{background:#35241b;color:#ffc28c}
-.cloud-hero{background:linear-gradient(135deg,#20324f,#182035 58%,#1a263a)}
-.cloud-auth-stack{display:grid;gap:9px;margin-top:12px}
-.cloud-message{min-height:18px;font-size:12px;color:#91a8c3;margin-top:8px}
-.cloud-connected{color:#8fe0b5}
-.cloud-status{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;color:#9badc5;font-size:12px}
-.cloud-actions{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
-.cloud-report{white-space:pre-wrap;color:#d7e2ef;line-height:1.62;margin-top:8px}
-.cloud-report-meta{font-size:11px;color:#7990ab;margin-top:3px}
-.cloud-history{width:100%;text-align:left;border:1px solid #23344d;background:#0c1929;color:#c9d8e9;border-radius:12px;padding:11px;margin-top:7px}
-.cloud-history small{display:block;color:#7890aa;margin-top:3px}
-@media(max-width:520px){.navin.five-tabs button{font-size:9px}.cloud-status{align-items:flex-start;flex-direction:column;gap:3px}}
+:root{--bg:#07101b;--panel:#0e1a29;--panel2:#122136;--text:#f5f8fc;--muted:#8ea2bb;--line:#1f324a;--accent:#79aef7;--green:#65d6a2;--orange:#ffb36f;--purple:#b6a0f2}
+body{background:linear-gradient(180deg,#091522 0%,#07101b 42%,#060d16 100%)}
+main{padding:13px 13px 18px}
+.top{padding:calc(12px + env(safe-area-inset-top)) 14px 10px;background:rgba(7,16,27,.92);border-bottom:1px solid rgba(255,255,255,.045)}
+.brand{font-size:20px}.gear{width:40px;height:40px;border-radius:12px;font-size:18px;background:#0d1a2a}
+.badges{gap:6px;margin-top:7px}.badge{padding:4px 8px;font-size:10px;background:#14243a;color:#b8c7d9}.badge.accent{background:#173459;color:#b6d5ff}
+.hero{padding:16px;border-radius:19px;background:linear-gradient(145deg,#163253,#102239 62%,#102035);border-color:#24466d;box-shadow:0 12px 28px rgba(0,0,0,.18)}
+.hero h1{font-size:27px;margin:6px 0 7px}.hero p{font-size:13px;line-height:1.48;color:#b4c4d7}.eyebrow{font-size:10px}.progress{margin-top:13px}.progresshead{font-size:10px}.bar{height:6px}
+.section{margin-top:15px}.sectionTitle{margin-bottom:8px}.sectionTitle h2{font-size:16px}.sectionTitle span{font-size:10px}
+.card{padding:12px;border-radius:15px;margin-bottom:8px;background:rgba(14,26,41,.94);border-color:#1f324a}
+.exercise{grid-template-columns:27px 1fr;gap:9px}.check{width:22px;height:22px;border-radius:7px;margin-top:1px}
+.name{font-size:15px;line-height:1.25}.rx{font-size:12.5px;margin-top:3px;color:#a9bbd0}.note{font-size:11px;margin-top:3px;color:#6f86a2}
+.logBar{margin-top:9px}.logToggle{min-height:34px;border-radius:10px;padding:0 10px;font-size:11px}.loggedPill{font-size:10px;padding:4px 7px}.logPanel{margin-top:9px;padding-top:9px}
+.lastTime{font-size:11px;padding:8px 9px;margin-bottom:8px}.setHead,.setRow{grid-template-columns:28px 1fr 1fr .72fr;gap:5px}.setHead{font-size:9px}.setRow{margin-bottom:5px}.mini{min-height:38px;padding:7px 5px;font-size:12px}
+.logActions{margin-top:8px}.smallBtn{min-height:33px;font-size:11px}.notes{min-height:56px}.autosave{font-size:10px}
+.loadGrid{gap:7px}.loadCard{padding:12px;border-radius:14px}.loadCard .big{font-size:19px}.weekTable th,.weekTable td{padding:9px 8px}.weekTable th{font-size:10px}.weekTable td{font-size:12px}
+.nav{padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:rgba(7,16,27,.96)}.navin{gap:3px}.nav button{height:50px;border-radius:13px;font-size:10px}.nav button span{font-size:17px;margin-bottom:1px}.nav button.active{background:#14263d;color:#deebfa}
+.navin.five-tabs{grid-template-columns:repeat(5,1fr)}.navin.five-tabs button{font-size:9px}
+.btn{min-height:40px;border-radius:11px;padding:0 13px;font-size:12px}.field{min-height:40px;border-radius:10px;font-size:13px}
+dialog{border-radius:19px;background:#0e1a29}
+#cloudBadge.cloud-online{background:#123326;color:#91e4ba}#cloudBadge.cloud-local{background:#35241b;color:#ffc28c}
+.cloud-hero{background:linear-gradient(145deg,#1b3350,#15253a 58%,#142237)}.cloud-auth-stack{display:grid;gap:8px;margin-top:11px}.cloud-message{min-height:16px;font-size:11px;color:#879db8;margin-top:7px}.cloud-connected{color:#8fe0b5}.cloud-status{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;color:#8fa3bd;font-size:11px}.cloud-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}.cloud-report{white-space:pre-wrap;color:#d6e1ed;line-height:1.56;margin-top:8px;font-size:13px}.cloud-report-meta{font-size:10px;color:#7188a4;margin-top:3px}.cloud-history{width:100%;text-align:left;border:1px solid #1f324a;background:#0b1725;color:#c9d8e9;border-radius:11px;padding:10px;margin-top:6px}.cloud-history small{display:block;color:#7188a4;margin-top:2px}
+@media(max-width:520px){main{padding:11px 11px 16px}.hero h1{font-size:25px}.navin.five-tabs button{font-size:8.5px}.cloud-status{align-items:flex-start;flex-direction:column;gap:2px}.loadGrid{grid-template-columns:1fr}.weekTable th:nth-child(4),.weekTable td:nth-child(4){display:none}}
