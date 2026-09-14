@@ -1,6 +1,6 @@
-const CACHE='hybrid-athlete-v6';
+const CACHE='hybrid-athlete-v7';
 const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./cloud.js','./cloud.css','./program-patch.js'];
-const INJECT='<link rel="stylesheet" href="./cloud.css?v=6"><script src="./program-patch.js?v=6"><\/script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"><\/script><script src="./cloud.js?v=6"><\/script>';
+const INJECT='<link rel="stylesheet" href="./cloud.css?v=7"><script src="./program-patch.js?v=7"><\/script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"><\/script><script src="./cloud.js?v=7"><\/script>';
 
 self.addEventListener('install',e=>e.waitUntil(
   caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())
