@@ -121,7 +121,16 @@ function ensureLog(key,name,rx){
 function hasData(log){return !!(log&&(log.notes||log.sets?.some(s=>s.weight||s.reps||s.rpe)))}
 function loggedCount(log){return log?.sets?.filter(s=>s.weight||s.reps||s.rpe).length||0}
 function lastFor(name,key){
- const candidates=Object.entries(state.setLogs).filter(([k,l])=>k!==key&&l.name===name&&hasData(l)).map(([k,l])=>({k,...l})).sort((a,b)=>(b.updated||0)-(a.updated||0));
+ const current=key.match(/^w(\d+)-(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)-(\d+)$/);
+ const currentWeek=current?Number(current[1]):state.week;
+ const candidates=Object.entries(state.setLogs)
+  .filter(([k,l])=>{
+    if(k===key||l.name!==name||!hasData(l))return false;
+    const parsed=k.match(/^w(\d+)-(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)-(\d+)$/);
+    return parsed&&Number(parsed[1])<currentWeek;
+  })
+  .map(([k,l])=>{const parsed=k.match(/^w(\d+)-/);return {k,week:parsed?Number(parsed[1]):0,...l}})
+  .sort((a,b)=>(b.week-a.week)||((b.updated||0)-(a.updated||0)));
  return candidates[0]||null;
 }
 function setSummary(log){
