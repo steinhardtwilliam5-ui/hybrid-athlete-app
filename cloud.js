@@ -250,17 +250,26 @@
     if (manual) renderAnalysis();
 
     try {
-      const {error: settingsError} = await cloud.client.from('coach_settings').upsert({
-        user_id:cloud.user.id,
-        current_cycle_id:cloud.cycleId,
-        current_week:state.week,
-        bench_e1rm:state.bench,
-        deadlift_e1rm:state.deadlift,
-        squat_e1rm:state.squat,
-        training_max_pct:state.tmPct,
-        goals:{bench:140,deadlift:220,squat:200,bodyweight:90}
-      }, {onConflict:'user_id'});
+      // The server is authoritative for the active coaching week and training settings.
+      // Pull it before uploading local workout logs so a stale installed PWA cannot
+      // roll coach_settings.current_week backwards after ChatGPT advances the program.
+      const {data: settingsRow, error: settingsError} = await cloud.client
+        .from('coach_settings')
+        .select('*')
+        .eq('user_id', cloud.user.id)
+        .single();
       if (settingsError) throw settingsError;
+
+      const serverWeek = Number(settingsRow.current_week);
+      if (serverWeek && serverWeek !== state.week) {
+        state.week = serverWeek;
+        state.bench = Number(settingsRow.bench_e1rm) || state.bench;
+        state.deadlift = Number(settingsRow.deadlift_e1rm) || state.deadlift;
+        state.squat = Number(settingsRow.squat_e1rm) || state.squat;
+        state.tmPct = Number(settingsRow.training_max_pct) || state.tmPct;
+        save();
+        if (typeof renderAll === 'function') renderAll();
+      }
 
       const keys = new Set([...Object.keys(state.setLogs || {}), ...Object.keys(state.completed || {})]);
       const rows = [];
@@ -329,7 +338,6 @@
 
   async function bootstrapCloud(session) {
     if (!session?.user) return;
-    if (cloud.user?.id === session.user.id && cloud.cycleId) return;
 
     cloud.session = session;
     cloud.user = session.user;
