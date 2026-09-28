@@ -1,10 +1,12 @@
-const CACHE='hybrid-athlete-v11';
+const CACHE='hybrid-athlete-v12';
 const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./cloud.js','./cloud.css','./program-patch.js','./running.js','./running.css','./running-cloud.js'];
-const INJECT='<link rel="stylesheet" href="./cloud.css?v=11"><link rel="stylesheet" href="./running.css?v=11"><script src="./program-patch.js?v=11"><\/script><script src="./running.js?v=11"><\/script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"><\/script><script src="./cloud.js?v=11"><\/script><script src="./running-cloud.js?v=11"><\/script>';
+const INJECT='<link rel="stylesheet" href="./cloud.css?v=12"><link rel="stylesheet" href="./running.css?v=12"><script src="./program-patch.js?v=12"><\/script><script src="./running.js?v=12"><\/script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"><\/script><script src="./cloud.js?v=12"><\/script><script src="./running-cloud.js?v=12"><\/script>';
 
 self.addEventListener('install',e=>e.waitUntil(
   caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())
 ));
+
+self.addEventListener('message',e=>{if(e.data?.type==='SKIP_WAITING')self.skipWaiting()});
 
 self.addEventListener('activate',e=>e.waitUntil(
   caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())
