@@ -418,9 +418,19 @@
         const key = keyFor(day, index);
         const cloudRx = state.cloudPrescriptions?.[key];
         if (!cloudRx) return localExerciseCard(day, exercise, index);
-        const originalRx = exercise[1];
-        const patchedExercise = [exercise[0], cloudRx, exercise[2]];
-        return localExerciseCard(day, patchedExercise, index);
+
+        // exerciseCard normally interprets symbolic MAIN/VOLUME/PAUSED tokens.
+        // Temporarily substitute the exact coach-authored prescription for this card.
+        const originalExerciseRx = exerciseRx;
+        exerciseRx = function(name, rx) {
+          if (name === exercise[0] && rx === cloudRx) return cloudRx;
+          return originalExerciseRx(name, rx);
+        };
+        try {
+          return localExerciseCard(day, [exercise[0], cloudRx, exercise[2]], index);
+        } finally {
+          exerciseRx = originalExerciseRx;
+        }
       };
     }
     window.__hybridCloudPrescriptionPatched = true;
