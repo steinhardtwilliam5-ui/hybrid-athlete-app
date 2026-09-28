@@ -226,7 +226,10 @@
     const {data, error} = await cloud.client.from('exercise_logs').select('*').eq('user_id', cloud.user.id).eq('cycle_id', cloud.cycleId);
     if (error) throw error;
 
+    state.cloudPrescriptions = state.cloudPrescriptions || {};
     for (const row of data || []) {
+      const prescriptionKey = `w${row.week_number}-${row.day_name}-${row.exercise_index}`;
+      if (row.prescription) state.cloudPrescriptions[prescriptionKey] = row.prescription;
       const key = `w${row.week_number}-${row.day_name}-${row.exercise_index}`;
       const cloudTime = Date.parse(row.updated_at) || 0;
       const localTime = state.setLogs[key]?.updated || 0;
@@ -289,7 +292,8 @@
           day_name:parsed.day,
           exercise_index:parsed.index,
           exercise_name:exercise[0],
-          prescription:prescriptionFor(exercise, parsed.week),
+          // Preserve coach-authored cloud prescriptions. Local calculation is fallback only.
+          prescription:state.cloudPrescriptions?.[key] || prescriptionFor(exercise, parsed.week),
           workout_date:workoutDate(parsed.week, parsed.day),
           completed:!!state.completed[key],
           sets:log.sets || [],
@@ -399,6 +403,29 @@
     }
   }
 
+  function patchCloudPrescriptions() {
+    if (typeof exerciseRx !== 'function' || window.__hybridCloudPrescriptionPatched) return;
+    const localExerciseRx = exerciseRx;
+    exerciseRx = function cloudFirstExerciseRx(name, rx) {
+      // Rendering functions call exerciseRx while iterating a known day/index. exerciseCard
+      // is patched below because it has the stable log key needed to resolve cloud data.
+      return localExerciseRx(name, rx);
+    };
+
+    if (typeof exerciseCard === 'function') {
+      const localExerciseCard = exerciseCard;
+      exerciseCard = function cloudFirstExerciseCard(day, exercise, index) {
+        const key = keyFor(day, index);
+        const cloudRx = state.cloudPrescriptions?.[key];
+        if (!cloudRx) return localExerciseCard(day, exercise, index);
+        const originalRx = exercise[1];
+        const patchedExercise = [exercise[0], cloudRx, exercise[2]];
+        return localExerciseCard(day, patchedExercise, index);
+      };
+    }
+    window.__hybridCloudPrescriptionPatched = true;
+  }
+
   function patchCoreApp() {
     if (typeof save === 'function' && !window.__hybridCloudSavePatched) {
       const localSave = save;
@@ -420,6 +447,7 @@
 
   async function init() {
     injectUi();
+    patchCloudPrescriptions();
     patchCoreApp();
     renderCloudBadge();
     renderAnalysis();
