@@ -177,7 +177,7 @@ function openSettings(){setWeek.value=state.week;setBench.value=state.bench;setD
 document.querySelector('#settingsBtn').addEventListener('click',openSettings);
 document.querySelector('#saveSettings').addEventListener('click',e=>{e.preventDefault();state.week=+setWeek.value;state.bench=+setBench.value||135;state.deadlift=+setDeadlift.value||205;state.squat=+setSquat.value||175;state.tmPct=(+setTm.value||95)/100;save();settings.close();renderAll()});
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===b.dataset.view));window.scrollTo({top:0,behavior:'smooth'})}));
-renderAll();if('serviceWorker'in navigator)window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('./sw.js?v=12',{updateViaCache:'none'});await reg.update();if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});}catch(e){console.warn('[Hybrid Athlete SW]',e)}});
+renderAll();if('serviceWorker'in navigator)window.addEventListener('load',async()=>{try{let refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;window.location.reload()});const reg=await navigator.serviceWorker.register('./sw.js?v=16',{updateViaCache:'none'});await reg.update();if(reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});}catch(e){console.warn('[Hybrid Athlete SW]',e)}});
 </script>
 </body>
 </html>
