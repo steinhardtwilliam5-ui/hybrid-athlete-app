@@ -1,4 +1,4 @@
-const CACHE='hybrid-athlete-v17';
+const CACHE='hybrid-athlete-v18';
 const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./v2.css','./app-v2.js'];
 
 self.addEventListener('install', event => {
