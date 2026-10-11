@@ -131,7 +131,9 @@
 
   function templateByKey(key){return state.templates.find(t=>t.session_key===key)}
   function templateExercises(templateId){return state.exercises.filter(e=>e.session_template_id===templateId).sort((a,b)=>a.position-b.position)}
-  function scheduleForWeek(week){return state.schedule.filter(s=>Number(s.week_number)===Number(week)).sort((a,b)=>a.scheduled_day-b.scheduled_day||a.position-b.position)}
+  function sessionExercises(template,workout){const base=templateExercises(template.id);if(!workout)return base;const extra=state.exerciseLogs.filter(l=>l.workout_session_id===workout.id&&!l.exercise_template_id&&l.exercise_key?.startsWith('custom_')).map(l=>({id:l.id,session_template_id:template.id,exercise_key:l.exercise_key,exercise_name:l.exercise_name,exercise_type:'strength',position:l.exercise_position||999,prescription:l.prescription||{text:l.prescription_text},custom:true}));return [...base,...extra].sort((a,b)=>a.position-b.position)}
+async function addSessionExercise(template,week){if(!navigator.onLine){alert('Connect to add an exercise');return}const name=prompt('New exercise name:');if(!name?.trim())return;const rx=prompt('Prescription (sets, reps, weight):','3 × 10')||'3 × 10';try{const w=await ensureWorkout(template,week),id=crypto.randomUUID();const row={id,user_id:state.user.id,workout_session_id:w.id,exercise_template_id:null,exercise_key:'custom_'+id.replaceAll('-',''),exercise_name:name.trim(),exercise_position:1000+state.exerciseLogs.filter(l=>l.workout_session_id===w.id&&!l.exercise_template_id).length,prescription_text:rx,prescription:{text:rx,origin:'user_added'},sets:[],completed:false,notes:''};const {data,error}=await client.from('exercise_logs_v2').insert(row).select().single();if(error)throw error;state.exerciseLogs.unshift(data);state.openLogs.add(draftKey(week,id));saveCache();renderAll()}catch(e){alert('Could not add exercise: '+e.message)}}
+function scheduleForWeek(week){return state.schedule.filter(s=>Number(s.week_number)===Number(week)).sort((a,b)=>a.scheduled_day-b.scheduled_day||a.position-b.position)}
   function sessionsForDay(week,day){return scheduleForWeek(week).filter(s=>Number(s.scheduled_day)===Number(day)).map(s=>({schedule:s,template:state.templates.find(t=>t.id===s.session_template_id)})).filter(x=>x.template)}
   function workoutFor(week,sessionKey){return state.workouts.find(w=>Number(w.week_number)===Number(week)&&w.session_key===sessionKey)}
   function logsForWorkout(id){return state.exerciseLogs.filter(l=>l.workout_session_id===id)}
@@ -233,19 +235,19 @@
   function renderSession(template,week,scheduledDay) {
     const workout=workoutFor(week,template.session_key);
     if(template.session_type==='run')return renderRunSession(template,workout,week);
-    const exs=templateExercises(template.id);
+    const exs=sessionExercises(template,workout);
     const done=exs.filter(ex=>getExerciseDraft(ex,workout,week).completed).length;
-    return `<div class="card sessionCard"><div class="sessionHead"><div><div class="sessionType">${esc(template.session_type)}</div><div class="sessionTitle">${esc(template.name)}</div><div class="sessionMeta">${done}/${exs.length} complete${template.notes?` • ${esc(template.notes)}`:''}</div></div>${scheduledDay&&Number(scheduledDay)!==Number(template.default_day)?'<span class="badge">Moved</span>':''}</div><div class="exerciseList">${exs.map(ex=>renderExercise(ex,workout,week)).join('')}</div></div>`;
+    return `<div class="card sessionCard"><div class="sessionHead"><div><div class="sessionType">${esc(template.session_type)}</div><div class="sessionTitle">${esc(template.name)}</div><div class="sessionMeta">${done}/${exs.length} complete${template.notes?` • ${esc(template.notes)}`:''}</div></div>${scheduledDay&&Number(scheduledDay)!==Number(template.default_day)?'<span class="badge">Moved</span>':''}</div><div class="exerciseList">${exs.map(ex=>renderExercise(ex,workout,week)).join('')}</div><div class="inlineActions" style="padding:12px"><button class="btn small addSessionExercise" data-template="${template.id}" data-week="${week}" type="button">+ Add exercise</button></div></div>`;
   }
 
   function renderToday() {
     const el=document.querySelector('#today'); if(state.loading){renderLoading('today');return}
     if(!state.user && !state.program){el.innerHTML=`<div class="hero"><div class="eyebrow">Hybrid Athlete v2</div><h1>Your training, rebuilt properly.</h1><p>Sign in from Settings to load your program and migrated history.</p></div>${state.error?`<div class="section"><div class="notice warning">${esc(state.error)}</div></div>`:''}`;return}
     const week=currentWeek(), day=dayNum(), sessions=sessionsForDay(week,day);
-    const total=sessions.reduce((n,x)=>n+(x.template.session_type==='run'?1:templateExercises(x.template.id).length),0);
-    let done=0; sessions.forEach(x=>{const w=workoutFor(week,x.template.session_key);if(x.template.session_type==='run'){if(w&&enduranceForWorkout(w.id)?.completed)done++}else templateExercises(x.template.id).forEach(ex=>{if(getExerciseDraft(ex,w,week).completed)done++})});
+    const total=sessions.reduce((n,x)=>n+(x.template.session_type==='run'?1:sessionExercises(x.template,workoutFor(week,x.template.session_key)).length),0);
+    let done=0; sessions.forEach(x=>{const w=workoutFor(week,x.template.session_key);if(x.template.session_type==='run'){if(w&&enduranceForWorkout(w.id)?.completed)done++}else sessionExercises(x.template,w).forEach(ex=>{if(getExerciseDraft(ex,w,week).completed)done++})});
     el.innerHTML=`<div class="hero"><div class="eyebrow">${DAYS[day-1]} • Week ${week}</div><h1>${sessions.length?sessions.map(x=>x.template.name).join(' + '):'Recovery day'}</h1><p>${sessions.length?'Your schedule is data-driven now — moving a session won’t change its history.':'Nothing compulsory is scheduled today.'}</p>${total?`<div class="progress"><div class="progressHead"><span>Today</span><span>${done}/${total}</span></div><div class="bar"><i style="width:${Math.round(done/total*100)}%"></i></div></div>`:''}</div>${state.error?`<div class="section"><div class="notice warning">${esc(state.error)}</div></div>`:''}<div class="section"><div class="sectionTitle"><h2>${sessions.length?'Sessions':'Off / recovery'}</h2><span>${phase()}</span></div>${sessions.length?sessions.map(x=>renderSession(x.template,week,x.schedule.scheduled_day)).join(''):'<div class="empty">Walk, recover, or move a session here from Plan.</div>'}</div>`;
-    wireExerciseCards('#today'); wireRunCards('#today');
+    wireExerciseCards('#today'); wireRunCards('#today');el.querySelectorAll('.addSessionExercise').forEach(b=>b.addEventListener('click',()=>addSessionExercise(templateById(b.dataset.template),Number(b.dataset.week))));
   }
 
   function renderPlan() {
@@ -307,7 +309,7 @@
 
   function wireExerciseCards(scope) {
     document.querySelectorAll(`${scope} [data-exercise-id]`).forEach(card=>{
-      const ex=state.exercises.find(e=>e.id===card.dataset.exerciseId), week=Number(card.dataset.week), key=draftKey(week,ex.id);
+      const ex=state.exercises.find(e=>e.id===card.dataset.exerciseId)||state.exerciseLogs.filter(l=>l.id===card.dataset.exerciseId).map(l=>({id:l.id,session_template_id:card.dataset.templateId,exercise_key:l.exercise_key,exercise_name:l.exercise_name,exercise_type:'strength',position:l.exercise_position,prescription:l.prescription||{text:l.prescription_text},custom:true}))[0], week=Number(card.dataset.week), key=draftKey(week,ex.id);
       card.querySelector('.logToggle')?.addEventListener('click',()=>{state.openLogs.has(key)?state.openLogs.delete(key):state.openLogs.add(key);renderAll()});
       card.querySelector('.exCheck')?.addEventListener('change',e=>{getExerciseDraft(ex,workoutFor(week,templateById(ex.session_template_id).session_key),week).completed=e.target.checked;scheduleExerciseSave(ex,week)});
       card.querySelectorAll('.setRow').forEach(row=>{
@@ -336,7 +338,7 @@
     if(!state.user||!navigator.onLine)return;
     try {
       setSync('Saving…','orange'); const template=templateById(ex.session_template_id), w=await ensureWorkout(template,week), d=getExerciseDraft(ex,w,week);
-      const payload={user_id:state.user.id,workout_session_id:w.id,exercise_template_id:ex.id,exercise_key:ex.exercise_key,exercise_name:ex.exercise_name,exercise_position:ex.position,prescription_text:displayRx(ex,week),prescription:ex.prescription||{},completed:!!d.completed,sets:d.sets||[],notes:d.notes||'',updated_at:new Date().toISOString()};
+      const payload={user_id:state.user.id,workout_session_id:w.id,exercise_template_id:ex.custom?null:ex.id,exercise_key:ex.exercise_key,exercise_name:ex.exercise_name,exercise_position:ex.position,prescription_text:ex.custom?(ex.prescription?.text||''):displayRx(ex,week),prescription:ex.prescription||{},completed:!!d.completed,sets:d.sets||[],notes:d.notes||'',updated_at:new Date().toISOString()};
       let result;
       if(d.id) result=await client.from('exercise_logs_v2').update(payload).eq('id',d.id).select().single();
       else result=await client.from('exercise_logs_v2').insert({...payload,id:crypto.randomUUID()}).select().single();
