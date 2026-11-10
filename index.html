@@ -1,44 +1,51 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#08101c" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Hybrid Athlete" />
-  <link rel="manifest" href="./manifest.json" />
-  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./v2.css?v=2" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101310">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Hybrid Athlete">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./v3.css?v=30">
   <title>Hybrid Athlete</title>
 </head>
 <body>
-<div class="app">
-  <header class="top">
-    <div class="topline">
-      <div class="brand">Hybrid Athlete</div>
-      <div class="topActions"><button class="iconBtn" id="refreshBtn" aria-label="Refresh">↻</button></div>
-    </div>
-    <div class="badges"><span class="badge accent" id="weekBadge">Week —</span><span class="badge" id="phaseBadge">v2</span><span class="badge orange" id="syncBadge">Local</span></div>
-  </header>
-  <main>
-    <section id="today" class="view active"></section>
-    <section id="plan" class="view"></section>
-    <section id="progress" class="view"></section>
-    <section id="coach" class="view"></section>
-    <section id="settings" class="view"></section>
-  </main>
-</div>
-<nav class="nav"><div class="navin">
-  <button data-view="today" class="active"><span>◉</span>Today</button>
-  <button data-view="plan"><span>▤</span>Plan</button>
-  <button data-view="progress"><span>↗</span>Progress</button>
-  <button data-view="coach"><span>✦</span>Coach</button>
-  <button data-view="settings"><span>⚙︎</span>Settings</button>
-</div></nav>
-<dialog id="swapDialog"><div class="modal"><h2>Swap days</h2><p>Swap every session scheduled on two days for this week.</p><div class="grid2"><label class="formLabel">First day<select id="swapA" class="field"></select></label><label class="formLabel">Second day<select id="swapB" class="field"></select></label></div><div class="actions"><button class="btn" id="swapCancel">Cancel</button><button class="btn primary" id="swapApply">Swap</button></div></div></dialog>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0"></script>
-<script src="./app-v2.js?v=18"></script>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{})}</script>
+  <a class="skipLink" href="#main">Skip to training</a>
+  <aside class="rail">
+    <a class="wordmark" href="#today" aria-label="Hybrid Athlete home"><img src="./icon.svg" alt=""><span>HYBRID<span class="wordmarkSecond">ATHLETE</span></span></a>
+    <nav class="nav" aria-label="Main navigation">
+      <span class="railLabel">WORKSPACE</span>
+      <button data-view="today" aria-current="page">Today</button>
+      <button data-view="plan">Plan</button>
+      <button data-view="progress">Progress</button>
+      <button data-view="coach">Coach</button>
+      <button data-view="settings">Settings</button>
+    </nav>
+    <div class="railFoot"><span></span> HYBRID ATHLETE <b>V3.0</b></div>
+  </aside>
+  <div class="app">
+    <header class="top">
+      <div class="topContext"><img src="./icon.svg" alt=""><span>TRAINING SYSTEM <b> / </b> <strong id="viewLabel">TODAY</strong></span></div>
+      <div class="topActions">
+        <span class="sync" id="syncBadge" role="status">Connecting</span>
+        <button class="iconBtn" id="refreshBtn" type="button" aria-label="Refresh training"></button>
+      </div>
+    </header>
+    <main id="main" tabindex="-1">
+      <section id="today" class="view active" aria-label="Today"></section>
+      <section id="plan" class="view" aria-label="Training plan" hidden></section>
+      <section id="progress" class="view" aria-label="Progress" hidden></section>
+      <section id="coach" class="view" aria-label="Coach" hidden></section>
+      <section id="settings" class="view" aria-label="Settings" hidden></section>
+      <section id="workout" class="view" aria-label="Workout" hidden></section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <dialog id="editor" aria-labelledby="editorTitle"></dialog>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0" defer></script>
+  <script src="./app-v2.js?v=30" defer></script>
 </body>
 </html>
